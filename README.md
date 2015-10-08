@@ -59,4 +59,20 @@ Here's how CloudCompose works:
  * When deploying CloudCompose to the server using Ansible, you provide a variables called `base_url`. CloudCompose will use this to look for a Docker Compose file. The first URL CloudCompose will try is `http://$base_url/$IP` (where $IP is the IP of `eth0`). If this fails, CloudCompose will default to `http://$base_url/docker-compose.yml`.
  * Once the file has been fetched, CloudCompose will then call on `docker-compose` to invoke the Docker containers described in the file.
 
+Once you have CloudCompose up and running, you can interact with your instances either using `cloudcompose` or directly using `docker-compose` on the host.
 
+```
+$ cloudcompose --ps
+Name                   Command             State              Ports
+------------------------------------------------------------------------------------
+cloudnet_redis_1   /entrypoint.sh redis-server   Up      6379/tcp
+cloudnet_web_1     nginx -g daemon off;          Up      443/tcp, 0.0.0.0:80->80/tcp
+```
+
+```
+$ docker-compose ps
+Name                   Command             State              Ports
+------------------------------------------------------------------------------------
+cloudnet_redis_1   /entrypoint.sh redis-server   Up      6379/tcp
+cloudnet_web_1     nginx -g daemon off;          Up      443/tcp, 0.0.0.0:80->80/tcp
+```
