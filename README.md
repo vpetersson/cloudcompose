@@ -10,6 +10,14 @@ tl;dr: An automated method for deploying [Docker Compose](https://docs.docker.co
 
 ## Installation
 
+Clone the repository and submodules:
+
+```
+$ git clone git@github.com:vpetersson/cloudcompose.git
+$ cd cloudcompose
+$ git submodule update --recursive
+```
+
 Install Ansible:
 
 `$ pip install -r requirements.txt`
