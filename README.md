@@ -76,3 +76,5 @@ Name                   Command             State              Ports
 cloudnet_redis_1   /entrypoint.sh redis-server   Up      6379/tcp
 cloudnet_web_1     nginx -g daemon off;          Up      443/tcp, 0.0.0.0:80->80/tcp
 ```
+
+For more information on how to use Docker Compose, please see the [official Docker Compose documentation](https://docs.docker.com/compose/).
