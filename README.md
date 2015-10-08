@@ -1,6 +1,6 @@
 # CloudCompose
 
-tl;dr: An automated method for deploying [Docker Compose](https://docs.docker.com/compose/) for [Cloud.net](http://cloud.net) by [OnApp](https://onapp.com/).
+**tl;dr:** An automated method for deploying [Docker Compose](https://docs.docker.com/compose/) for [Cloud.net](http://cloud.net) by [OnApp](https://onapp.com/).
 
 ## Requirements
 
