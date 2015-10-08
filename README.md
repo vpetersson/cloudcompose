@@ -6,12 +6,16 @@ tl;dr: An automated method for deploying [Docker Compose](https://docs.docker.co
 
 ## Requirements
 
- * Ubuntu 14.04 VM
+ * An Ubuntu 14.04 VM
  * A `docker-compose.yml`-file available over HTTP
  * Ansible
 
 ## Installation
 
 Install Ansible:
-`pip install -r requirements.txt`
 
+ * `pip install -r requirements.txt`
+
+Configure the VM:
+
+ * `ansible-playbook -u YourUser --diff -i inventory/foobar site.yml`

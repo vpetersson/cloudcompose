@@ -5,7 +5,7 @@
   vars:
     - base_url: https://raw.githubusercontent.com/vpetersson/cloudcompose/master/example/
     - project: cloudnet
-    - compose_file: /root/docker-compose.ini
+    - compose_file: /root/docker-compose.yml
 
   roles:
     - cloudcompose

@@ -31,9 +31,9 @@ def compose_init():
     compose_url_fallback = '{}/{}'.format(BASEURL, 'docker-compose.yml')
 
     if requests.head(compose_url_ip).status_code == 200:
-        compose_url == compose_url_ip
+        compose_url = compose_url_ip
     elif requests.head(compose_url_fallback).status_code == 200:
-        compose_url == compose_url_fallback
+        compose_url = compose_url_fallback
     else:
         print 'Unable to retrieve compose file...'
         syslog.syslog(syslog.LOG_ERR, 'Unable to retrieve compose file...')
