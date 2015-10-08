@@ -1,0 +1,33 @@
+---
+# @TODO
+#  * Add Docker installation
+
+- name: Installs package requirements
+  apt:
+    name={{ item }}
+    state=present
+  with_items:
+    - python-pip
+    - python-dev
+    - libffi-dev
+    - libssl-dev
+
+- name: Installs PIP packages
+  pip:
+    name={{ item }}
+    state=present
+  with_items:
+    - docker-compose
+    - requests[security]
+    - requests
+    - sh==1.11
+
+- name: Copy in cloudcompose.py
+  copy:
+    src=cloudcompose.py
+    dest=/usr/local/bin/cloudcompose
+    mode=0755
+    owner=root
+    group=root
+  tags:
+    - deploy
