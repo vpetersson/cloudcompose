@@ -1,7 +1,4 @@
 ---
-# @TODO
-#  * Add Docker installation
-
 - name: Installs package requirements
   apt:
     name={{ item }}

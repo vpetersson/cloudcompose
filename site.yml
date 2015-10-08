@@ -8,4 +8,5 @@
     - compose_file: /root/docker-compose.yml
 
   roles:
+    - docker.ubuntu
     - cloudcompose
