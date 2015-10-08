@@ -5,8 +5,7 @@ tl;dr: An automated method for deploying [Docker Compose](https://docs.docker.co
 ## Requirements
 
  * An Ubuntu 14.04 VM
- * A `docker-compose.yml`-file available over HTTP
- * Ansible
+ * A `docker-compose.yml`-file available over HTTP/HTTPS
 
 ## Installation
 
