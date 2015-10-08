@@ -1,8 +1,7 @@
 description "CloudCompose Init"
-author "Cloud.net"
+author "Viktor Petersson for OnApp's Cloud.net"
 start on filesystem and started docker
 stop on runlevel [!2345]
-respawn
 script
   /usr/local/bin/cloudcompose --init
 end script

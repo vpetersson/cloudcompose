@@ -32,9 +32,19 @@
   tags:
     - deploy
 
+- name: Copy in cloudcompose.cfg
+  template:
+    src=cloudcompose.cfg.j2
+    dest=/usr/local/etc/cloudcompose.cfg
+    mode=0644
+    owner=root
+    group=root
+  tags:
+    - deploy
+
 - name: Copy in upstart script
   copy:
-    src=cloudcompose
+    src=upstart_cloudcompose
     dest=/etc/init/cloudcompose.conf
     mode=0644
     owner=root
@@ -48,3 +58,11 @@
   service:
     name=cloudcompose
     enabled=yes
+
+- name: Copy in profile script
+  copy:
+    src=profile_cloudcompose.sh
+    dest=/etc/profile.d/cloudcompose.sh
+    mode=0644
+    owner=root
+    group=root
