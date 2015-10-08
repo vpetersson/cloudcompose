@@ -5,6 +5,7 @@ import sh
 import socket
 import sys
 import argparse
+import syslog
 
 IP = socket.gethostbyname(socket.gethostname())
 BASEURL = 'https://dl.dropboxusercontent.com/u/2096546/tmp/onapp/'
@@ -14,21 +15,30 @@ PROJECT = 'cloudnet'
 
 def update_software():
     print 'Updating CloudCompose stack...'
+    syslog.syslog('Updating CloudCompose stack...')
     sh.apt_get('update')
     sh.apt_get('-y', 'install', 'docker')
     sh.pip('install', '-U', 'docker-compose')
 
 
 def compose_init():
+    syslog.syslog('Initializing CloudCompose...')
     compose_url = '{}/{}'.format(BASEURL, IP)
     get_compose_file = requests.get(compose_url)
 
     if get_compose_file.status_code == 200:
+        syslog.syslog('Successfully fetched compose file...')
         with open(COMPOSEFILE, 'w') as f:
             f.write(get_compose_file.content)
-        return sh.docker_compose('-p', PROJECT, '-f', COMPOSEFILE, 'up', '-d')
+        try:
+            compose = sh.docker_compose('-p', PROJECT, '-f', COMPOSEFILE, 'up', '-d')
+            syslog.syslog('Compose exited with exit code {}'.format(compose.exit_code))
+            return compose
+        except:
+            syslog.syslog('Unable to launch Docker Compose.')
     else:
         print 'Unable to retrieve compose file...'
+        syslog.syslog(syslog.LOG_ERR, 'Unable to retrieve compose file...')
         sys.exit(1)
 
 
@@ -44,7 +54,7 @@ def main():
 
     args = parser.parse_args()
     if args.init:
-        print compose_init()
+        compose_init()
     elif args.update:
         update_software()
     elif args.ps:

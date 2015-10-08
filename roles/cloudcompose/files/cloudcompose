@@ -1,0 +1,8 @@
+description "CloudCompose Init"
+author "Cloud.net"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  /usr/local/bin/cloudcompose --init
+end script

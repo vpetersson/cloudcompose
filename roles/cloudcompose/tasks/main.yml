@@ -31,3 +31,20 @@
     group=root
   tags:
     - deploy
+
+- name: Copy in upstart script
+  copy:
+    src=cloudcompose
+    dest=/etc/init/cloudcompose.conf
+    mode=0644
+    owner=root
+    group=root
+  notify:
+    - reload initctl
+  tags:
+    - deploy
+
+- name: Enables CloudCompose service
+  service:
+    name=cloudcompose
+    enabled=yes
