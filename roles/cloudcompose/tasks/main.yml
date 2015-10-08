@@ -51,11 +51,6 @@
   tags:
     - deploy
 
-- name: Enables CloudCompose service
-  service:
-    name=cloudcompose
-    enabled=yes
-
 - name: Copy in profile script
   template:
     src=profile_cloudcompose.sh.j2
