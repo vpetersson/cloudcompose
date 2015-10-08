@@ -16,7 +16,7 @@ Install Ansible:
 
 Configure the VM:
 
-`$ ansible-playbook -u YourUser --diff -i inventory/foobar site.yml`
+`$ ansible-playbook -u YourUser --diff -i inventory/myservers site.yml`
 
 A more realistic usage would be something like this:
 
