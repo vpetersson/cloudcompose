@@ -15,13 +15,10 @@ Clone the repository and submodules:
 $ git clone git@github.com:vpetersson/cloudcompose.git
 $ cd cloudcompose
 $ git submodule update --recursive
+$ pip install -r requirements.txt
 ```
 
-Install Ansible:
-
-`$ pip install -r requirements.txt`
-
-Configure the VM:
+Configure the VM with CloudCompose:
 
 `$ ansible-playbook -u YourUser --diff -i inventory/myservers site.yml`
 
