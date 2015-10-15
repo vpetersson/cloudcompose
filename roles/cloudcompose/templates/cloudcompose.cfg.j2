@@ -1,4 +1,12 @@
 [main]
+; The base URL, such as http://www.example.com/cloudcompose
 base_url={{ base_url }}
+
+; The Docker Compose project prefix
 project={{ project }}
-compose_file= {{ compose_file }}
+
+; The path to the compose file
+compose_file={{ compose_file }}
+
+; The retry period that system will wait for the IP specific file will become available (in minutes)
+retry_period={{ retry_period }}

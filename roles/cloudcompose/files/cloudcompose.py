@@ -7,6 +7,8 @@ import sys
 import argparse
 import syslog
 import ConfigParser
+import time
+import datetime
 
 config = ConfigParser.RawConfigParser()
 config.read('/usr/local/etc/cloudcompose.cfg')
@@ -14,52 +16,69 @@ IP = socket.gethostbyname(socket.gethostname())
 BASEURL = config.get('main', 'base_url')
 COMPOSEFILE = config.get('main', 'compose_file')
 PROJECT = config.get('main', 'project')
+RETRY_PERIOD = config.get('main', 'retry_period')
+
+def logger(msg, error=False):
+    print(msg)
+    if not error:
+        syslog.syslog(msg)
+    else:
+        syslog.syslog(syslog.LOG_ERR, msg)
 
 
 def update_software():
-    print 'Updating CloudCompose stack...'
-    syslog.syslog('Updating CloudCompose stack...')
+    logger('Updating CloudCompose stack...')
     sh.apt_get('update')
     sh.apt_get('-y', 'install', 'docker')
     sh.pip('install', '-U', 'docker-compose')
 
 
 def compose_init():
-    syslog.syslog('Initializing CloudCompose...')
+    logger('Initializing CloudCompose...')
     compose_url = None
     compose_url_ip = '{}/{}'.format(BASEURL, IP)
     compose_url_fallback = '{}/{}'.format(BASEURL, 'docker-compose.yml')
+    give_up_at = datetime.datetime.utcnow() + datetime.timedelta(
+        minutes=int(RETRY_PERIOD))
 
-    if requests.head(compose_url_ip).status_code == 200:
-        compose_url = compose_url_ip
-    elif requests.head(compose_url_fallback).status_code == 200:
-        compose_url = compose_url_fallback
-    else:
-        print 'Unable to retrieve compose file...'
-        syslog.syslog(syslog.LOG_ERR, 'Unable to retrieve compose file...')
-        sys.exit(1)
+    # Keep retrying during RETRY_PERIOD.
+    while give_up_at > datetime.datetime.utcnow():
+        if requests.head(compose_url_ip).status_code == 200:
+            compose_url = compose_url_ip
+            break
+        else:
+            logger(
+                'Unable to fetch IP specific compose file. Giving in {}.)'
+                .format(give_up_at - datetime.datetime.utcnow()))
+            time.sleep(10)
+
+    if not compose_url:
+        if requests.head(compose_url_fallback).status_code == 200:
+            logger('Unable to fetch IP specific file. Using fallback-file.')
+            compose_url = compose_url_fallback
+        else:
+            logger('Unable to retrieve compose file...', error=True)
+            sys.exit(1)
 
     get_compose_file = requests.get(compose_url)
 
     if get_compose_file.status_code == 200:
-        syslog.syslog(
-            'Successfully fetched compose file from {}...'.format(compose_url)
-        )
+        logger('Successfully fetched compose file from {}...'
+               .format(compose_url))
         with open(COMPOSEFILE, 'w') as f:
             f.write(get_compose_file.content)
         try:
             compose = sh.docker_compose(
                 '-p', PROJECT, '-f', COMPOSEFILE, 'up', '-d'
             )
-            syslog.syslog(
+            logger(
                 'Compose exited with exit code {}'.format(compose.exit_code)
             )
             return compose
         except:
-            syslog.syslog('Unable to launch Docker Compose.')
+            logger('Unable to launch Docker Compose.')
     else:
-        print 'Unable to retrieve compose file...'
-        syslog.syslog(syslog.LOG_ERR, 'Unable to retrieve compose file...')
+        logger('Unable to retrieve compose file...', error=True)
         sys.exit(1)
 
 
