@@ -1,8 +1,16 @@
-web:
-  image: nginx
+wordpress:
+  image: wordpress
   ports:
    - "80:80"
   links:
-   - redis
-redis:
-  image: redis
+   - mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=my-secret-pw
+  volumes:
+   - /usr/local/wp-content:/var/www/html/wp-content
+mysql:
+  image: mariadb
+  environment:
+   - MYSQL_ROOT_PASSWORD=my-secret-pw
+  volumes:
+   - /var/lib/mysql:/var/lib/mysql

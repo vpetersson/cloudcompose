@@ -60,25 +60,25 @@ The real magic in this application is done by [`cloudcompose.py`](https://github
 
 Here's how CloudCompose works:
 
- * When deploying CloudCompose to the server using Ansible, you provide a variables called `base_url`. CloudCompose will use this to look for a Docker Compose file. The first URL CloudCompose will try is `http://$base_url/$IP` (where $IP is the IP of `eth0`). If this fails, CloudCompose will default to `http://$base_url/docker-compose.yml`.
+ * When deploying CloudCompose to the server using Ansible, you provide a variables called `base_url`. CloudCompose will use this to look for a Docker Compose file. The first URL CloudCompose will try is `http://$base_url/$IP` (where $IP is the IP of `eth0`) for the duration of `retry_period`. If this fails, CloudCompose will default to `http://$base_url/docker-compose.yml`.
  * Once the file has been fetched, CloudCompose will then call on `docker-compose` to invoke the Docker containers described in the file.
 
 Once you have CloudCompose up and running, you can interact with your instances either using `cloudcompose` or directly using `docker-compose` on the host.
 
 ```
-$ cloudcompose --ps
-Name                   Command             State              Ports
-------------------------------------------------------------------------------------
-cloudnet_redis_1   /entrypoint.sh redis-server   Up      6379/tcp
-cloudnet_web_1     nginx -g daemon off;          Up      443/tcp, 0.0.0.0:80->80/tcp
+cloudcompose --ps
+        Name                      Command               State         Ports
+----------------------------------------------------------------------------------
+cloudnet_mysql_1       /docker-entrypoint.sh mysqld     Up      3306/tcp
+cloudnet_wordpress_1   /entrypoint.sh apache2-for ...   Up      0.0.0.0:80->80/tcp
 ```
 
 ```
 $ docker-compose ps
-Name                   Command             State              Ports
-------------------------------------------------------------------------------------
-cloudnet_redis_1   /entrypoint.sh redis-server   Up      6379/tcp
-cloudnet_web_1     nginx -g daemon off;          Up      443/tcp, 0.0.0.0:80->80/tcp
+        Name                      Command               State         Ports
+----------------------------------------------------------------------------------
+cloudnet_mysql_1       /docker-entrypoint.sh mysqld     Up      3306/tcp
+cloudnet_wordpress_1   /entrypoint.sh apache2-for ...   Up      0.0.0.0:80->80/tcp
 ```
 
 For more information on how to use Docker Compose, please see the [official Docker Compose documentation](https://docs.docker.com/compose/).
